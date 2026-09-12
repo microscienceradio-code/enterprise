@@ -586,6 +586,11 @@
         <div class="video-wrap">
           <iframe id="liberation-video" src="" title="Liberation Day Memorial recording" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
         </div>
+        <div class="playlist-controls" style="display:flex;gap:10px;margin-top:14px;">
+          <button type="button" id="liberation-prev" class="btn" style="cursor:pointer;">← Previous</button>
+          <button type="button" id="liberation-next" class="btn" style="cursor:pointer;">Next →</button>
+        </div>
+        <p style="color:var(--text-dim);font-size:.85rem;margin-top:8px;">Tip: click the playlist icon in the top-right corner of the player to jump to any video directly.</p>
       </div>
     </div>
   </section>
@@ -670,7 +675,20 @@
   var SUMMIT_VIDEO_ID = 'JGFdlSlaeAg';
   var LIBERATION_PLAYLIST_ID = 'PLTFPidHk5y10';
   document.getElementById('summit-video').src = 'https://www.youtube.com/embed/' + SUMMIT_VIDEO_ID;
-  document.getElementById('liberation-video').src = 'https://www.youtube.com/embed/videoseries?list=' + LIBERATION_PLAYLIST_ID;
+  document.getElementById('liberation-video').src = 'https://www.youtube.com/embed/videoseries?list=' + LIBERATION_PLAYLIST_ID + '&enablejsapi=1';
+
+  // ---- Playlist prev/next controls (liberation day) ----
+  (function playlistControls(){
+    var iframe = document.getElementById('liberation-video');
+    var prevBtn = document.getElementById('liberation-prev');
+    var nextBtn = document.getElementById('liberation-next');
+    if(!iframe || !prevBtn || !nextBtn) return;
+    function sendCommand(func){
+      iframe.contentWindow.postMessage(JSON.stringify({event:'command', func:func, args:[]}), 'https://www.youtube.com');
+    }
+    prevBtn.addEventListener('click', function(){ sendCommand('previousVideo'); });
+    nextBtn.addEventListener('click', function(){ sendCommand('nextVideo'); });
+  })();
 
   // ---- Data ----
   var ACTIVE_DIRECTIVES = [
