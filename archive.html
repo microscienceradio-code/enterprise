@@ -599,16 +599,18 @@
   // { name, dateLabel, theme, projects: [{codename, doc}], videoId, docs: [{label, url}] }
   var SUMMITS = [
     {
-      name: 'December Summit 2025 — Part II',
-      dateLabel: 'Convened 12/09/2026',
-      theme: 'Convened following a major life transition. Set the operating direction for the remaining months of the cycle and introduced the four Core Superior Directives.',
-      projects: [
-        { codename: 'Project Falcon', doc: 'https://docs.google.com/document/d/1bAYhPCn5aff2fAVQWrWIbaG89yHPpJAhKnImVCi-xd0/edit?usp=sharing' },
-        { codename: 'Architect of Tomorrow', doc: 'https://docs.google.com/document/d/19Dtjo2hMxjJTRITDptqhoYQqDAYf-Jp9NW3qRptV0tU/edit?usp=sharing' },
-        { codename: 'Project Touchdown America', doc: 'https://docs.google.com/document/d/1i7LlwebKltha6LLOxC08jBj6bLFCcQm6HphOn-j5v5w/edit?usp=sharing' },
-        { codename: 'Operation Apex', doc: 'https://docs.google.com/document/d/1YuoC1fvEmBbkwCRSfBcl4h1YQvXdonPmCVbD7ou3AdQ/edit?usp=sharing' }
-      ],
-      videoId: 'JGFdlSlaeAg'
+      name: 'December Summit 2025 — Part I',
+      dateLabel: 'December 2025',
+      docs: [
+        { label: 'Open Archive Folder', url: 'https://drive.google.com/drive/folders/1xDmvRCIu6OS0bgeFlXZggv2R0GEzRUqR?usp=drive_link' }
+      ]
+    },
+    {
+      name: 'December Summit 2024',
+      dateLabel: 'December 2024',
+      docs: [
+        { label: 'Open Archive Folder', url: 'https://drive.google.com/drive/folders/1XntS-JGDsuFOGas3C0dvCq6WFPpX28Y3?usp=drive_link' }
+      ]
     }
   ];
 
@@ -635,11 +637,28 @@
   }
 
   function summitEntryHTML(s, idx){
-    var projectsHTML = s.projects.map(function(p){
-      return '<li><strong style="color:var(--heading);">' + escapeHTML(p.codename) + '</strong>' +
-        (p.doc ? ' — <a href="' + p.doc + '" target="_blank" rel="noopener">Open Directive →</a>' : '') +
-        '</li>';
-    }).join('');
+    var themeHTML = s.theme ? '<p>' + escapeHTML(s.theme) + '</p>' : '';
+
+    var projectsHTML = '';
+    if(s.projects && s.projects.length){
+      projectsHTML =
+        '<p style="color:var(--text-dim);font-weight:700;letter-spacing:.08em;font-size:.85rem;text-transform:uppercase;margin-bottom:10px;">Projects Governed Under This Summit</p>' +
+        '<ul class="brief-list">' + s.projects.map(function(p){
+          return '<li><strong style="color:var(--heading);">' + escapeHTML(p.codename) + '</strong>' +
+            (p.doc ? ' — <a href="' + p.doc + '" target="_blank" rel="noopener">Open Directive →</a>' : '') +
+            '</li>';
+        }).join('') + '</ul>';
+    }
+
+    var docsHTML = '';
+    if(s.docs && s.docs.length){
+      docsHTML = '<ul class="brief-list">' + s.docs.map(function(d){
+        return '<li><a href="' + d.url + '" target="_blank" rel="noopener">' + escapeHTML(d.label) + ' →</a></li>';
+      }).join('') + '</ul>';
+    }
+
+    var videoHTML = s.videoId ? '<div class="video-wrap"><iframe src="https://www.youtube.com/embed/' + s.videoId + '" title="' + escapeHTML(s.name) + ' recording" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>' : '';
+
     return '' +
     '<details class="panel tl-entry"' + (idx === 0 ? ' open' : '') + '>' +
       '<summary>' +
@@ -647,10 +666,10 @@
         '<span class="chev" aria-hidden="true">▸</span>' +
       '</summary>' +
       '<div class="tl-body"><div class="tl-body-inner">' +
-        '<p>' + escapeHTML(s.theme) + '</p>' +
-        '<p style="color:var(--text-dim);font-weight:700;letter-spacing:.08em;font-size:.85rem;text-transform:uppercase;margin-bottom:10px;">Projects Governed Under This Summit</p>' +
-        '<ul class="brief-list">' + projectsHTML + '</ul>' +
-        '<div class="video-wrap"><iframe src="https://www.youtube.com/embed/' + s.videoId + '" title="' + escapeHTML(s.name) + ' recording" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>' +
+        themeHTML +
+        projectsHTML +
+        docsHTML +
+        videoHTML +
       '</div></div>' +
     '</details>';
   }
